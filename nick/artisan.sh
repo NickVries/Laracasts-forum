@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+docker-compose exec app php artisan "$@"
+
+./nick/helpers/fixpermissions.sh
