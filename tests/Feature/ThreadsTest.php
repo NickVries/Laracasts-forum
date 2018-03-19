@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -9,21 +10,32 @@ class ThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
+    protected $thread;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->thread = factory(Thread::class)->create();
+    }
+
     /** @test */
     public function testUserCanBrowseAllThreads()
     {
-        $thread = factory('App\Thread')->create();
-
-        $response = $this->get('/threads');
-        $response->assertSee($thread->title);
+        $this->get('/threads')
+            ->assertSee($this->thread->title);
     }
 
     /** @test */
     public function testUserCanReadASingleThread()
     {
-        $thread = factory('App\Thread')->create();
+        $this->get('/threads/' . $this->thread->id)
+            ->assertSee($this->thread->title);
+    }
 
-        $response = $this->get('/threads/' . $thread->id);
-        $response->assertSee($thread->title);
+    /** @test */
+    public function testUserCanReadRepliesOnAThread()
+    {
+
     }
 }
